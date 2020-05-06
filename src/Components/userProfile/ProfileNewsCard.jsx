@@ -42,18 +42,56 @@ export class ProfileNewsCard extends Component {
     return x;
   };
 
+  filterNews = (choice) => {
+    let dataHolder = this.state.newsData.data;
+    let newsArr = [];
+
+    switch (choice) {
+      case "1":
+        dataHolder.map((el) => {
+          if (el.sentiment === 'Positive') {
+            newsArr.push(el);
+          }
+        });
+        break;
+      case "2":
+        dataHolder.map((el) => {
+          if (el.sentiment === 'Negative') {
+            newsArr.push(el);
+          }
+        });
+        break;
+      case "3":
+        dataHolder.map((el) => {
+          if (el.sentiment === 'Neutral') {
+            newsArr.push(el);
+          }
+        });
+        break;
+
+      default:
+        newsArr = dataHolder;
+        break;
+    }
+    return newsArr;
+  };
+
   render() {
     const { data } = this.state.newsData;
-    const { stocks } = this.props;
+    const { stocks, choice } = this.props;
+    let news = data;
 
     return (
       <div>
         <Grid style={{ display: 'grid' }} container justify="center">
           {this.state.news ? (
             <List>
-              {data.map((el) => {
-                return this.checkNewsStock(el.tickers, stocks, el);
-              })}
+              {
+                ((news = this.filterNews(choice)),
+                news.map((el) => {
+                  return this.checkNewsStock(el.tickers, stocks, el);
+                }))
+              }
             </List>
           ) : (
             <Progress />
